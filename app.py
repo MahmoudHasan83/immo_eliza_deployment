@@ -70,7 +70,7 @@ app = FastAPI()
 #     return item.salary + item.bonus - item.taxes
 
 
-@app.post("/items/")
+@app.post("/property/")
 async def create_item(prop: Property):
     df_processed = cl.preprocess(prop)
     pred = prediction.predict(df_processed)
