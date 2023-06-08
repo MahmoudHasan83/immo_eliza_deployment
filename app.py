@@ -1,11 +1,12 @@
 import pandas as pd
+import numpy as np
 from typing import Optional 
 from fastapi import FastAPI,Path
 from pydantic import BaseModel
 from pydantic import Field
 from typing import Literal
 from preprocessing import cleaning_data as cl
-
+from predict import prediction
 
 # class Item(BaseModel):
 
@@ -25,33 +26,33 @@ from preprocessing import cleaning_data as cl
        'Kitchen type scale', 'Building condition scale', 'Region']
     
 class Property(BaseModel):
-    Property_type: Literal['appartment','house'] = Field(description="Only 'Appartment' and 'House' fields are available")
+    Property_type: Literal['apartment','house'] = Field(description="Only 'Appartment' and 'House' fields are available")
     Property_sub_type: Literal['duplex', 'penthouse', 'flat studio', 'mansion', 'villa',
        'apartment block', 'town house', 'loft', 'house', 'apartment',
        'exceptional property', 'country cottage', 'triplex', 'bungalow',
        'ground floor', 'chalet', 'mixed use building', 'castle',
        'service flat', 'manor house', 'farmhouse', 'other property',
-       'kot'] | None = Field(default = 0,description = "The condition of the building ")
+       'kot'] = Field(description = "The condition of the building ")
     Bed_rooms: int = Field(gt=1,lt=50, description="At least one bed room and maximum 50")
     Living_area: int = Field(gt=10, description="At least a house with 10 square meters living area")
     Kitchen_type: Literal['USA hyper equipped', 'Installed', 'Hyper equipped',
        'USA installed','Semi equipped', 'USA semi equipped',
-       'Not installed', 'USA uninstalled'] | None = Field(default = 0,description = "Enter 1 if there is a Terrace ")
+       'Not installed', 'USA uninstalled'] | None = Field(default = "Empty",description = "Enter 1 if there is a Terrace ")
     Fire_place: int | None = Field(default = 0,description = "Enter 1 if there is a fireplace and 1 if there are none")
     Terrace: int | None = Field(default = 0,description = "Enter 1 if there is a Terrace ")
     Terrace_surface: int | None = Field(default = 0,description= " The surface of the Terrace in square meters")
     Garden: int | None = Field(default = 0,description = "Enter 1 if you have a Garden ")
     Garden_surface: int | None = Field(default = 0,description= " The surface of the Garden in square meters")
-    Surface_of_plot: int | None = Field(gt=10,description=" Enter the Surface of the plot in Square meters")
+    Surface_of_plot: int | None = Field(default = 0, gt=10,description=" Enter the Surface of the plot in Square meters")
     facades_number:int | None = Field(default = 0,description= " The number of facade")
     Swimming_pool:int | None = Field(default = 0,description= " Enter 1 if you have a swimming pool ")
-    Building_condition: Literal['As new', 'Good', 'Just renovated', 'To be done up', 'To renovate','To restore'] | None = Field(default = 0,description = "The condition of the building ")
+    Building_condition: Literal['As new', 'Good', 'Just renovated', 'To be done up', 'To renovate','To restore'] | None = Field(default = "Empty",description = "The condition of the building ")
     Basement:int | None = Field(default = 0,description= " Enter 1 if you have a Basement")
     Energy_class:Literal['B', 'F', 'E', 'G', 'C', 'D', 'A', 'A++', 'A+', 'A_A+',
-       'G_A++', 'G_F', 'E_D', 'C_B', 'D_C', 'E_C', 'G_C', 'F_B'] | None = Field(default = 0,description = " The energy class Entry")
+       'G_A++', 'G_F', 'E_D', 'C_B', 'D_C', 'E_C', 'G_C', 'F_B'] | None = Field(default = "Empty",description = " The energy class Entry")
     Heating_type:Literal['Gas', 'Electric', 'Fuel oil', 'Pellet', 'Wood', 'Solar',
-       'Carbon'] | None = Field(default = 0,description="The Heating type Entry ")
-    Region:Literal ['Walloon', 'Brussels capital region', 'Flander'] | None = Field(default = 0, description="Select the Region ")
+       'Carbon'] | None = Field(default = "Empty",description="The Heating type Entry ")
+    Region:Literal ['Walloon', 'Brussels capital region', 'Flander'] | None = Field(default = "Empty", description="Select the Region ")
     
     
 
@@ -71,11 +72,9 @@ app = FastAPI()
 
 @app.post("/items/")
 async def create_item(prop: Property):
-    df_processed = cl.clean(prop)
-    
-    df_processed.to_csv("testing.csv", index=False)
-
-    return f"{df_processed}"
+    df_processed = cl.preprocess(prop)
+    pred = prediction.predict(df_processed)
+    return f"{pred}"
 
 
 # @app.post("/prediction/")

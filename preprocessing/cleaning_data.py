@@ -1,46 +1,15 @@
 import pandas as pd
+from joblib import dump, load
+from sklearn.preprocessing import OneHotEncoder
 
-index_data = ['Bedrooms', 'Living area (m²)',
-       'How many fireplaces?', 'Terrace', 'Terrace surface (m²)',
-       'Garden', 'Garden surface (m²)', 'Surface of the plot (m²)',
-       'Number of frontages', 'Swimming pool', 'Basement',
-       'Kitchen type scale', 'Building condition scale',
-       'Type of Property_apartment', 'Type of Property_house',
-       'Subtype of Property_apartment',
-       'Subtype of Property_apartment block',
-       'Subtype of Property_bungalow', 'Subtype of Property_castle',
-       'Subtype of Property_chalet',
-       'Subtype of Property_country cottage',
-       'Subtype of Property_duplex',
-       'Subtype of Property_exceptional property',
-       'Subtype of Property_farmhouse', 'Subtype of Property_flat studio',
-       'Subtype of Property_ground floor', 'Subtype of Property_house',
-       'Subtype of Property_kot', 'Subtype of Property_loft',
-       'Subtype of Property_manor house', 'Subtype of Property_mansion',
-       'Subtype of Property_mixed use building',
-       'Subtype of Property_other property',
-       'Subtype of Property_penthouse',
-       'Subtype of Property_service flat',
-       'Subtype of Property_town house', 'Subtype of Property_triplex',
-       'Subtype of Property_villa', 'Kitchen type_Hyper equipped',
-       'Kitchen type_Installed', 'Kitchen type_Not installed',
-       'Kitchen type_Semi equipped', 'Kitchen type_USA hyper equipped',
-       'Kitchen type_USA installed', 'Kitchen type_USA semi equipped',
-       'Kitchen type_USA uninstalled', 'Building condition_As new',
-       'Building condition_Good', 'Building condition_Just renovated',
-       'Building condition_To be done up',
-       'Building condition_To renovate', 'Building condition_To restore',
-       'Energy class_A', 'Energy class_A+', 'Energy class_A++',
-       'Energy class_A_A+', 'Energy class_B', 'Energy class_C',
-       'Energy class_C_B', 'Energy class_D', 'Energy class_D_C',
-       'Energy class_E', 'Energy class_E_C', 'Energy class_E_D',
-       'Energy class_F', 'Energy class_F_B', 'Energy class_G',
-       'Energy class_G_A++', 'Energy class_G_C', 'Energy class_G_F',
-       'Heating type_Carbon', 'Heating type_Electric',
-       'Heating type_Fuel oil', 'Heating type_Gas', 'Heating type_Pellet',
-       'Heating type_Solar', 'Heating type_Wood',
-       'Region_Brussels capital region', 'Region_Flemish',
-       'Region_Walloon']
+
+def garden_terrace_fix(df):
+    filter_G = df["Garden surface (m²)"] == 0
+    print(filter_G)
+    df.loc[~filter_G,'Garden'] = 1
+    filter_T = df["Terrace surface (m²)"] == 0
+    df.loc[~filter_T,'Terrace'] = 1
+    return df
 
 def add_Build_scale(df):
     building_condition_scale={'As new':6,'Just renovated':5, 'Good':4, 'To renovate':2,
@@ -62,7 +31,32 @@ def move_region_last(df):
     df.insert(19, Region_column.name, Region_column)
     return df
 
-def clean(data_dict: dict):
+def set_data_types(df):
+    df = df.astype({"Living area (m²)":"float", "Terrace":"float", "Garden":"float",
+        "Terrace surface (m²)":"float",
+        "Garden surface (m²)":"float","Surface of the plot (m²)":"float",
+        "Bedrooms":"float","How many fireplaces?":"float",
+        "Subtype of Property":"object","Kitchen type":"object", 
+        "Building condition":"object","Energy class":"object","Heating type":"object",
+        "Number of frontages":"float","Kitchen type scale":"float",
+        "Building condition scale":"float","Region":"object"})
+    return df
+
+def hot_one_encode(df):
+    OH_encoder = load("/home/mahmoud/Desktop/Training/immo_eliza_deployment/preprocessing/Encoded.pkl") # load and reuse the model
+    object_cols = ['Type of Property', 'Subtype of Property', 'Kitchen type',
+       'Building condition', 'Energy class', 'Heating type', 'Region']
+    OH_cols = pd.DataFrame(OH_encoder.transform(df[object_cols]))
+    OH_cols.index = df.index
+    OH_cols.columns = OH_encoder.get_feature_names_out()
+    df = df.drop(object_cols, axis=1)
+    df = pd.concat([df, OH_cols], axis=1)
+    df = df.drop(['Kitchen type_Empty', 'Building condition_Empty', 
+            'Energy class_Empty', 'Heating type_Empty'], axis=1)
+    return df
+
+
+def preprocess(data_dict: dict):   # def clean(data_dict: dict):
     df = pd.DataFrame.from_dict(data_dict).set_index(0).T
     df = df.rename(columns = {'Zip_code':'Zip code', 'Property_type':'Type of Property', 'Living_area':'Living area (m²)', 
                               'Bed_rooms':'Bedrooms', 'Garden':'Garden', 'Terrace':'Terrace', 'Terrace_surface':'Terrace surface (m²)', 
@@ -75,6 +69,9 @@ def clean(data_dict: dict):
     df = add_kitch_scale(df)
     df = add_Build_scale(df)
     df = move_region_last(df)
+    df = set_data_types(df)
+    df = hot_one_encode(df)
+    df = garden_terrace_fix(df)
 
     return df
 
