@@ -61,9 +61,10 @@ class Property(BaseModel):
 
 app = FastAPI()
 
-# @app.get("/path/{number}")
-# async def Mult_num(number: int = Path(description='Enter the number to multiply by 2')):
-#     return number * 2
+@app.get("/")
+async def Welcome():
+    '''Welcome Route'''
+    return " Welcome to my API "
 
 # @app.post("/items/")
 # async def create_item(item: Item):
@@ -72,6 +73,9 @@ app = FastAPI()
 
 @app.post("/property/")
 async def create_item(prop: Property):
+    ''' Function that takes home details and then route it to preprocessing and eventually 
+    take the processed data, send it again to the prediction module  and then redirect the 
+    result to the API to show the final result of the prediction'''
     df_processed = cl.preprocess(prop)
     pred = prediction.predict(df_processed)
     return f"{pred}"

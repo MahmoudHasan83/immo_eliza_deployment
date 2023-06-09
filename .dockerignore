@@ -1,0 +1,6 @@
+*__pycache__*
+README.md
+Dockerfile
+*.ipynb_checkpoints
+immo_eliza_deployment_env
+*.ipynb
