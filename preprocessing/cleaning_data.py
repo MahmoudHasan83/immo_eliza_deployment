@@ -43,7 +43,7 @@ def set_data_types(df):
     return df
 
 def hot_one_encode(df):
-    OH_encoder = load("/home/mahmoud/Desktop/Training/immo_eliza_deployment/preprocessing/Encoded.pkl") # load and reuse the model
+    OH_encoder = load("preprocessing/Encoded.pkl") # load and reuse the model
     object_cols = ['Type of Property', 'Subtype of Property', 'Kitchen type',
        'Building condition', 'Energy class', 'Heating type', 'Region']
     OH_cols = pd.DataFrame(OH_encoder.transform(df[object_cols]))
@@ -183,58 +183,58 @@ def preprocess(data_dict: dict):   # def clean(data_dict: dict):
 
 
 
-# df_dummy = pd.read_csv('testing.csv')
-# df = pd.DataFrame(columns=index_data)
-# df.loc[len(df)] = 0
-# print(df_dummy)
-# df['Bedrooms'].iloc[0] = df_dummy['Bed_rooms'].iloc[0]
-# df['Living area (m²)'].iloc[0] = df_dummy['Living_area'].iloc[0]
-# df['How many fireplaces?'].iloc[0]= df_dummy['Fire_place'].iloc[0]
-# df['Terrace'].iloc[0]= df_dummy['Terrace'].iloc[0]
-# df['Terrace surface (m²)'].iloc[0]= df_dummy['Terrace_surface'].iloc[0]
-# df['Garden'].iloc[0]= df_dummy['Garden'].iloc[0]
-# df['Garden surface (m²)'].iloc[0]= df_dummy['Garden surface (m²)'].iloc[0]
-# df['Surface_of_plot'].iloc[0]= df_dummy['Surface of the plot (m²)'].iloc[0]
-# df['Number of frontages'].iloc[0] = df_dummy['Frontages'].iloc[0]
-# df['Swimming pool'].iloc[0] = df_dummy['Swimming_pool'].iloc[0]
-# df['Basement'].iloc[0] = df_dummy['Basement'].iloc[0]
-# df['Number of frontages'].iloc[0] = df_dummy['Property_type'].iloc[0]
+# # df_dummy = pd.read_csv('testing.csv')
+# # df = pd.DataFrame(columns=index_data)
+# # df.loc[len(df)] = 0
+# # print(df_dummy)
+# # df['Bedrooms'].iloc[0] = df_dummy['Bed_rooms'].iloc[0]
+# # df['Living area (m²)'].iloc[0] = df_dummy['Living_area'].iloc[0]
+# # df['How many fireplaces?'].iloc[0]= df_dummy['Fire_place'].iloc[0]
+# # df['Terrace'].iloc[0]= df_dummy['Terrace'].iloc[0]
+# # df['Terrace surface (m²)'].iloc[0]= df_dummy['Terrace_surface'].iloc[0]
+# # df['Garden'].iloc[0]= df_dummy['Garden'].iloc[0]
+# # df['Garden surface (m²)'].iloc[0]= df_dummy['Garden surface (m²)'].iloc[0]
+# # df['Surface_of_plot'].iloc[0]= df_dummy['Surface of the plot (m²)'].iloc[0]
+# # df['Number of frontages'].iloc[0] = df_dummy['Frontages'].iloc[0]
+# # df['Swimming pool'].iloc[0] = df_dummy['Swimming_pool'].iloc[0]
+# # df['Basement'].iloc[0] = df_dummy['Basement'].iloc[0]
+# # df['Number of frontages'].iloc[0] = df_dummy['Property_type'].iloc[0]
 
 
-# 'Kitchen type scale', 'Building condition scale'
+# # 'Kitchen type scale', 'Building condition scale'
 
-# match df_dummy['Property_type'].iloc[0]:
-#     case "apartment":
-#         df['Type of Property_apartment'].iloc[0] = 1
-#     case "house":
-#         df['Type of Property_house'].iloc[0] = 1
+# # match df_dummy['Property_type'].iloc[0]:
+# #     case "apartment":
+# #         df['Type of Property_apartment'].iloc[0] = 1
+# #     case "house":
+# #         df['Type of Property_house'].iloc[0] = 1
 
 
-# match df_dummy['Kitchen_type'].iloc[0]:
+# # match df_dummy['Kitchen_type'].iloc[0]:
       
-#     case "USA hyper equipped":
-#         df['Kitchen type_'].iloc[0] = 1
+# #     case "USA hyper equipped":
+# #         df['Kitchen type_'].iloc[0] = 1
 
-#     case "Installed":
-#             df['Kitchen type_Installed'].iloc[0] = 1
+# #     case "Installed":
+# #             df['Kitchen type_Installed'].iloc[0] = 1
 
-#     case "Hyper equipped":
-#             df['Kitchen type_Hyper equipped'].iloc[0] = 1
+# #     case "Hyper equipped":
+# #             df['Kitchen type_Hyper equipped'].iloc[0] = 1
 
-#     case "USA installed":
-#             df['Kitchen type_USA installed'].iloc[0] = 1
+# #     case "USA installed":
+# #             df['Kitchen type_USA installed'].iloc[0] = 1
 
-#     case "Not installed":
-#             df['Kitchen type_Not installed'].iloc[0] = 1
+# #     case "Not installed":
+# #             df['Kitchen type_Not installed'].iloc[0] = 1
 
-#     case "USA uninstalled":
-#             df['Kitchen type_USA uninstalled'].iloc[0] = 1
+# #     case "USA uninstalled":
+# #             df['Kitchen type_USA uninstalled'].iloc[0] = 1
 
-#     case "Semi equipped":
-#             df['Kitchen type_Semi equipped'].iloc[0] = 1
+# #     case "Semi equipped":
+# #             df['Kitchen type_Semi equipped'].iloc[0] = 1
 
-#     case "USA semi equipped":
-#             df['Kitchen type_USA semi equipped'].iloc[0] = 1
+# #     case "USA semi equipped":
+# #             df['Kitchen type_USA semi equipped'].iloc[0] = 1
 
 
     
@@ -242,11 +242,11 @@ def preprocess(data_dict: dict):   # def clean(data_dict: dict):
     
 
 
-    # Building_condition,
-    # Property_sub_type,
-    # Energy_class,
-    # Heating_type,
-    # Region
+#     # Building_condition,
+#     # Property_sub_type,
+#     # Energy_class,
+#     # Heating_type,
+#     # Region
 
 
-    # return df_dummy
+#     # return df_dummy

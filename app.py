@@ -43,7 +43,7 @@ class Property(BaseModel):
     Terrace_surface: int | None = Field(default = 0,description= " The surface of the Terrace in square meters")
     Garden: int | None = Field(default = 0,description = "Enter 1 if you have a Garden ")
     Garden_surface: int | None = Field(default = 0,description= " The surface of the Garden in square meters")
-    Surface_of_plot: int | None = Field(default = 0, gt=10,description=" Enter the Surface of the plot in Square meters")
+    Surface_of_plot: int | None = Field(default = 0, ge=10,description=" Enter the Surface of the plot in Square meters")
     facades_number:int | None = Field(default = 0,description= " The number of facade")
     Swimming_pool:int | None = Field(default = 0,description= " Enter 1 if you have a swimming pool ")
     Building_condition: Literal['As new', 'Good', 'Just renovated', 'To be done up', 'To renovate','To restore'] | None = Field(default = "Empty",description = "The condition of the building ")
